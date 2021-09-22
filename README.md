@@ -1,4 +1,4 @@
-# Translation Translation aka T2
+# Traduction Translation aka T2
 
 Fix text by double translation.
 
