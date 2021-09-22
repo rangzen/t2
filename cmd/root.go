@@ -30,18 +30,18 @@ import (
 
 var cfgFile string
 var sourceLang string
-var pivotalLang string
+var pivotLang string
 var usage bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "double-deepl [flags] \"Text to translate.\"",
+	Use:     "double-deepl [flags] \"Text to translate.\"",
 	Example: "double-deepl -s EN-US \"I will treat my wound.\"",
-	Short: "Double translation using deepl.com",
+	Short:   "Double translation using deepl.com",
 	Long: `Use deepl.com translation services to translate from
-a source language to a pivotal one and translate again
-to the source language.
-In the process, most of the obvious errors are corrected.`,
+a source language to a pivot language and translate back
+into the source language.
+During this process, most obvious errors are corrected.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		doubleDeepl(cmd, args)
@@ -61,14 +61,14 @@ func doubleDeepl(cmd *cobra.Command, args []string) error {
 
 	fmt.Println("# Original text")
 	fmt.Println(text)
-	firstPass, err := d.DeeplTranslate(text, sourceLang, pivotalLang)
+	firstPass, err := d.DeeplTranslate(text, sourceLang, pivotLang)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("# Pivotal text")
+	fmt.Println("# Pivot text")
 	fmt.Println(firstPass.Translations[0].Text)
-	secondPass, err := d.DeeplTranslate(firstPass.Translations[0].Text, pivotalLang, sourceLang)
+	secondPass, err := d.DeeplTranslate(firstPass.Translations[0].Text, pivotLang, sourceLang)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,7 +98,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.double-deepl.yaml)")
 
-	rootCmd.Flags().StringVarP(&pivotalLang, "pivotal", "p", "FR", "pivotal language")
+	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
 	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN", "source language")
 	rootCmd.Flags().BoolVarP(&usage, "usage", "u", false, "display usage at the end")
 }
