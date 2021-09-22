@@ -44,19 +44,23 @@ into the source language.
 During this process, most obvious errors are corrected.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		t2(cmd, args)
+		if err := t2(cmd, args); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
 func t2(cmd *cobra.Command, args []string) error {
-	if len(args) == 0 {
-		return errors.New("need text to translate")
+	endpoint := viper.GetString("Endpoint")
+	apiKey := viper.GetString("ApiKey")
+	if endpoint == "" || apiKey == "" {
+		return errors.New(".t2.yaml seems missing or empty")
 	}
 
 	text := args[0]
 	d := service.Deepl{
-		Endpoint: viper.GetString("Endpoint"),
-		ApiKey:   viper.GetString("ApiKey"),
+		Endpoint: endpoint,
+		ApiKey:   apiKey,
 	}
 
 	fmt.Println("# Original text")
