@@ -60,7 +60,7 @@ func (d Deepl) DeeplTranslate(text string, source string, target string) (DeeplR
 	if res.StatusCode != http.StatusOK {
 		return DeeplRequestResponse{}, errors.New(
 			fmt.Sprint("status:", res.StatusCode, " body:", string(body)),
-			)
+		)
 	}
 	var dres DeeplRequestResponse
 	err = json.Unmarshal(body, &dres)
