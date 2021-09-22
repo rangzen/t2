@@ -20,7 +20,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/rangzen/double-deepl/service"
+	"github.com/rangzen/t2/service"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -35,8 +35,8 @@ var usage bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "double-deepl [flags] \"Text to translate.\"",
-	Example: "double-deepl -s EN-US \"I will treat my wound.\"",
+	Use:     "t2 [flags] \"Text to translate.\"",
+	Example: "t2 -s EN-US \"I will treat my wound.\"",
 	Short:   "Double translation using deepl.com",
 	Long: `Use deepl.com translation services to translate from
 a source language to a pivot language and translate back
@@ -44,11 +44,11 @@ into the source language.
 During this process, most obvious errors are corrected.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		doubleDeepl(cmd, args)
+		t2(cmd, args)
 	},
 }
 
-func doubleDeepl(cmd *cobra.Command, args []string) error {
+func t2(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return errors.New("need text to translate")
 	}
@@ -96,7 +96,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.double-deepl.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.t2.yaml)")
 
 	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
 	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN", "source language")
@@ -116,7 +116,7 @@ func initConfig() {
 		// Search config in home directory with name ".double-deepl" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".double-deepl")
+		viper.SetConfigName(".t2")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

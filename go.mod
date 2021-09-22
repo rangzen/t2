@@ -1,4 +1,4 @@
-module github.com/rangzen/double-deepl
+module github.com/rangzen/t2
 
 go 1.16
 
