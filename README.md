@@ -18,3 +18,4 @@ Use [DeepL](https://deepl.com) as translation services.
 Endpoint: https://api-free.deepl.com/v2/translate
 ApiKey: redacted-0123-0123-0123-redacted:fx
 ```
+You can check `t2-example.yaml`for example.
