@@ -56,7 +56,7 @@ func t2(t string) error {
 		return errors.New(".t2.yaml seems missing or empty")
 	}
 
-	d := service.Deepl{
+	d := service.TranslationDeepl{
 		Endpoint: endpoint,
 		ApiKey:   apiKey,
 	}

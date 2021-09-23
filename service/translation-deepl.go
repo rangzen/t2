@@ -14,7 +14,7 @@ import (
 
 const deeplEndpointUsage = "https://api-free.deepl.com/v2/usage"
 
-type Deepl struct {
+type TranslationDeepl struct {
 	Endpoint string
 	ApiKey   string
 }
@@ -33,7 +33,7 @@ type DeeplRequestUsage struct {
 	CharacterLimit int64 `json:"character_limit"`
 }
 
-func (d Deepl) DeeplTranslate(text string, source string, target string) (DeeplRequestResponse, error) {
+func (d TranslationDeepl) Translate(text string, source string, target string) (TranslationResponse, error) {
 	client := &http.Client{}
 	deeplConfig := url.Values{}
 	deeplConfig.Set("text", text)
@@ -58,7 +58,7 @@ func (d Deepl) DeeplTranslate(text string, source string, target string) (DeeplR
 		log.Fatal(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		return DeeplRequestResponse{}, errors.New(
+		return TranslationResponse{}, errors.New(
 			fmt.Sprint("status:", res.StatusCode, " body:", string(body)),
 		)
 	}
@@ -67,10 +67,14 @@ func (d Deepl) DeeplTranslate(text string, source string, target string) (DeeplR
 	if err != nil {
 		log.Fatal(err)
 	}
-	return dres, nil
+	sb := strings.Builder{}
+	for _, t := range dres.Translations {
+		sb.WriteString(t.Text)
+	}
+	return TranslationResponse{Text: sb.String()}, nil
 }
 
-func (d Deepl) DeeplUsage() (string, error) {
+func (d TranslationDeepl) Usage() (UsageResponse, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, deeplEndpointUsage, nil)
 	if err != nil {
@@ -92,6 +96,8 @@ func (d Deepl) DeeplUsage() (string, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	result := fmt.Sprintf("Usage: %d/%d\n", dres.CharacterCount, dres.CharacterLimit)
-	return result, nil
+	return UsageResponse{
+		Used:  dres.CharacterCount,
+		Limit: dres.CharacterLimit,
+	}, nil
 }

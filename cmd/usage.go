@@ -47,16 +47,16 @@ func usage() error {
 		return errors.New(".t2.yaml seems missing or empty")
 	}
 
-	d := service.Deepl{
+	d := service.TranslationDeepl{
 		Endpoint: endpoint,
 		ApiKey:   apiKey,
 	}
 
-	u, err := d.DeeplUsage()
+	u, err := d.Usage()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf(u)
+	fmt.Printf("Usage: %d/%d\n", u.Used, u.Limit)
 	return nil
 }
 
