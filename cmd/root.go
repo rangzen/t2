@@ -36,7 +36,7 @@ var usage bool
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "t2 [flags] \"Text to translate.\"",
-	Example: "t2 -s EN-US \"I will treat my wound.\"",
+	Example: "t2 --source EN-US \"I will treat my wound.\"",
 	Short:   "Double translation using deepl.com",
 	Long: `Use deepl.com translation services to translate from
 a source language to a pivot language and translate back
