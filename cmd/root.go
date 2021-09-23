@@ -44,13 +44,13 @@ into the source language.
 During this process, most obvious errors are corrected.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := t2(cmd, args); err != nil {
+		if err := t2(args[0]); err != nil {
 			log.Fatal(err)
 		}
 	},
 }
 
-func t2(cmd *cobra.Command, args []string) error {
+func t2(t string) error {
 	endpoint := viper.GetString("Endpoint")
 	apiKey := viper.GetString("ApiKey")
 	if endpoint == "" || apiKey == "" {
@@ -69,7 +69,7 @@ func t2(cmd *cobra.Command, args []string) error {
 	}
 
 	t2 := service.NewT2(c, d)
-	return t2.TraductionTranslation(args[0])
+	return t2.TraductionTranslation(t)
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
