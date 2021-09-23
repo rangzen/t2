@@ -11,7 +11,6 @@ type t2Service struct {
 }
 
 type T2Config struct {
-	PrintUsage bool
 	SourceLang string
 	PivotLang  string
 }
@@ -37,14 +36,5 @@ func (t2 t2Service) TraductionTranslation(t string) error {
 
 	fmt.Println("# Double translated text")
 	fmt.Println(secondPass.Translations[0].Text)
-
-	if !t2.config.PrintUsage {
-		return nil
-	}
-	deeplUsage, err := t2.tr.DeeplUsage()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Usage: %d/%d\n", deeplUsage.CharacterCount, deeplUsage.CharacterLimit)
 	return nil
 }

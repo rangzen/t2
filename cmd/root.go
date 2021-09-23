@@ -31,7 +31,6 @@ import (
 var cfgFile string
 var sourceLang string
 var pivotLang string
-var usage bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -63,7 +62,6 @@ func t2(t string) error {
 	}
 
 	c := service.T2Config{
-		PrintUsage: usage,
 		SourceLang: sourceLang,
 		PivotLang:  pivotLang,
 	}
@@ -85,7 +83,6 @@ func init() {
 
 	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
 	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN", "source language")
-	rootCmd.Flags().BoolVarP(&usage, "usage", "u", false, "display usage at the end")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -70,7 +70,7 @@ func (d Deepl) DeeplTranslate(text string, source string, target string) (DeeplR
 	return dres, nil
 }
 
-func (d Deepl) DeeplUsage() (DeeplRequestUsage, error) {
+func (d Deepl) DeeplUsage() (string, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, deeplEndpointUsage, nil)
 	if err != nil {
@@ -92,5 +92,6 @@ func (d Deepl) DeeplUsage() (DeeplRequestUsage, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return dres, nil
+	result := fmt.Sprintf("Usage: %d/%d\n", dres.CharacterCount, dres.CharacterLimit)
+	return result, nil
 }
