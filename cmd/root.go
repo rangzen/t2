@@ -57,38 +57,19 @@ func t2(cmd *cobra.Command, args []string) error {
 		return errors.New(".t2.yaml seems missing or empty")
 	}
 
-	text := args[0]
 	d := service.Deepl{
 		Endpoint: endpoint,
 		ApiKey:   apiKey,
 	}
 
-	fmt.Println("# Original text")
-	fmt.Println(text)
-	firstPass, err := d.DeeplTranslate(text, sourceLang, pivotLang)
-	if err != nil {
-		log.Fatal(err)
+	c := service.T2Config{
+		PrintUsage: usage,
+		SourceLang: sourceLang,
+		PivotLang:  pivotLang,
 	}
 
-	fmt.Println("# Pivot text")
-	fmt.Println(firstPass.Translations[0].Text)
-	secondPass, err := d.DeeplTranslate(firstPass.Translations[0].Text, pivotLang, sourceLang)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("# Double translated text")
-	fmt.Println(secondPass.Translations[0].Text)
-
-	if !usage {
-		return nil
-	}
-	deeplUsage, err := d.DeeplUsage()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Usage: %d/%d\n", deeplUsage.CharacterCount, deeplUsage.CharacterLimit)
-	return nil
+	t2 := service.NewT2(c, d)
+	return t2.TraductionTranslation(args[0])
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
