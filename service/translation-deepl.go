@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -52,7 +53,12 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(res.Body)
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -86,7 +92,12 @@ func (d TranslationDeepl) Usage() (UsageResponse, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(res.Body)
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
