@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-type t2Service struct {
+type T2Service struct {
 	config T2Config
 	tr     Deepl
 }
@@ -15,11 +15,11 @@ type T2Config struct {
 	PivotLang  string
 }
 
-func NewT2(config T2Config, tr Deepl) t2Service {
-	return t2Service{config: config, tr: tr}
+func NewT2(config T2Config, tr Deepl) T2Service {
+	return T2Service{config: config, tr: tr}
 }
 
-func (t2 t2Service) TraductionTranslation(t string) error {
+func (t2 T2Service) TraductionTranslation(t string) error {
 	fmt.Println("# Original text")
 	fmt.Println(t)
 	firstPass, err := t2.tr.DeeplTranslate(t, t2.config.SourceLang, t2.config.PivotLang)
