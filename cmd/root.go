@@ -36,11 +36,11 @@ var pivotLang string
 var rootCmd = &cobra.Command{
 	Use:     "t2 [flags] \"Text to translate.\"",
 	Example: "t2 --source EN-US \"I will treat my wound.\"",
-	Short:   "Double translation using deepl.com",
-	Long: `Use deepl.com translation services to translate from
-a source language to a pivot language and translate back
-into the source language.
-During this process, most obvious errors are corrected.`,
+	Short:   "Double translation",
+	Long: `Use online translation services to translate from
+a source language to a pivot language, then translate back
+to the source language.
+During this process, the most obvious errors are corrected.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := t2(args[0]); err != nil {
