@@ -35,25 +35,19 @@ type DeeplRequestUsage struct {
 }
 
 func (d TranslationDeepl) Translate(text string, source string, target string) (TranslationResponse, error) {
-	client := &http.Client{}
-	deeplConfig := url.Values{}
-	deeplConfig.Set("text", text)
-	checkedSource := checkSource(source)
-	deeplConfig.Set("source_lang", checkedSource)
-	deeplConfig.Set("target_lang", target)
-	dcEncoded := deeplConfig.Encode()
-	req, err := http.NewRequest(http.MethodPost, d.Endpoint, strings.NewReader(dcEncoded))
+	deeplConfig := d.prepareDeeplConfig(text, source, target)
+
+	req, err := d.prepareRequest(deeplConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
-	req.Header.Add("Authorization", "DeepL-Auth-Key "+d.ApiKey)
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("Content-Length", strconv.Itoa(len(dcEncoded)))
 
+	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
@@ -69,16 +63,28 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 			fmt.Sprint("status:", res.StatusCode, " body:", string(body)),
 		)
 	}
+
 	var dres DeeplRequestResponse
 	err = json.Unmarshal(body, &dres)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	sb := strings.Builder{}
 	for _, t := range dres.Translations {
 		sb.WriteString(t.Text)
 	}
 	return TranslationResponse{Text: sb.String()}, nil
+}
+
+// prepareDeeplConfig creates the DeepL configuration
+func (d TranslationDeepl) prepareDeeplConfig(text string, source string, target string) url.Values {
+	deeplConfig := url.Values{}
+	deeplConfig.Set("text", text)
+	checkedSource := checkSource(source)
+	deeplConfig.Set("source_lang", checkedSource)
+	deeplConfig.Set("target_lang", target)
+	return deeplConfig
 }
 
 // checkSource will correct if needed the source language
@@ -91,18 +97,32 @@ func checkSource(source string) string {
 	return source
 }
 
+// prepareRequest creates the HTTP Request
+func (d TranslationDeepl) prepareRequest(deeplConfig url.Values) (*http.Request, error) {
+	dcEncoded := deeplConfig.Encode()
+	req, err := http.NewRequest(http.MethodPost, d.Endpoint, strings.NewReader(dcEncoded))
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", "DeepL-Auth-Key "+d.ApiKey)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Length", strconv.Itoa(len(dcEncoded)))
+	return req, err
+}
+
 func (d TranslationDeepl) Usage() (UsageResponse, error) {
-	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, deeplEndpointUsage, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 	req.Header.Add("Authorization", "DeepL-Auth-Key "+d.ApiKey)
 
+	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
@@ -113,6 +133,7 @@ func (d TranslationDeepl) Usage() (UsageResponse, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	var dres DeeplRequestUsage
 	err = json.Unmarshal(body, &dres)
 	if err != nil {
