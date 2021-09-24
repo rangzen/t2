@@ -38,7 +38,8 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 	client := &http.Client{}
 	deeplConfig := url.Values{}
 	deeplConfig.Set("text", text)
-	deeplConfig.Set("source_lang", source)
+	checkedSource := checkSource(source)
+	deeplConfig.Set("source_lang", checkedSource)
 	deeplConfig.Set("target_lang", target)
 	dcEncoded := deeplConfig.Encode()
 	req, err := http.NewRequest(http.MethodPost, d.Endpoint, strings.NewReader(dcEncoded))
@@ -78,6 +79,16 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 		sb.WriteString(t.Text)
 	}
 	return TranslationResponse{Text: sb.String()}, nil
+}
+
+// checkSource will correct if needed the source language
+func checkSource(source string) string {
+	// DeepL accept EN-GB and EN-US in target language but not as source language.
+	// https://www.deepl.com/docs-api/translating-text/request/
+	if source == "EN-GB" || source == "EN-US" {
+		return "EN"
+	}
+	return source
 }
 
 func (d TranslationDeepl) Usage() (UsageResponse, error) {

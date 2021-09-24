@@ -82,7 +82,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.t2.yaml)")
 
 	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
-	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN", "source language")
+	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN-US", "source language")
 }
 
 // initConfig reads in config file and ENV variables if set.
