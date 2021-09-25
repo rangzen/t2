@@ -10,7 +10,55 @@ As a developer, I wanted to try to automate this thing and share it with you.
 Just copy some text, then run `t2 clipboard`, and "voilà".  
 I hope it will help you.
 
-Yes, this paragraph was checked with t2 :)
+Yes, documentation was checked with t2 :)
+
+## Examples
+
+In a terminal, the diff version will appear in color:
+
+![diff screenshot](https://raw.githubusercontent.com/rangzen/t2/main/doc/Screenshot_20210925_diff.png)
+
+Don't forget the `--only-diff` or `-d` flag if you want to display only this part.
+
+### Translate from CLI
+
+```shell
+$ t2 "I want speak english."
+Using config file: /home/user/.t2.yaml
+# Original text
+I want speak english.
+# Pivot text
+Je veux parler anglais.
+# Double translated text
+I want to speak English.
+# Diff version
+I want to speak eEnglish.
+```
+
+### Translate from the clipboard
+
+Don't bother with copy/paste operations, quoting text, etc. Just copy what you want to check and then `t2 clipboard`.
+
+```shell
+$ t2 clipboard
+Using config file: /home/user/.t2.yaml
+# Original text
+Some text this was in clipboard.
+# Pivot text
+Certains textes étaient dans le presse-papiers.
+# Double translated text
+Some texts were in the clipboard.
+# Diff version
+Some text this wasere in the clipboard.
+```
+
+### Usage
+
+```shell
+$ t2 usage
+Using config file: /home/user/.t2.yaml
+Usage: 12477/500000
+```
 
 ## Installation
 
