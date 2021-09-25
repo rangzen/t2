@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/sergi/go-diff/diffmatchpatch"
 	"log"
 )
 
@@ -36,5 +37,11 @@ func (t2 T2Service) TraductionTranslation(t string) error {
 
 	fmt.Println("# Double translated text")
 	fmt.Println(secondPass.Text)
+
+	fmt.Println("# Diff version")
+	dmp := diffmatchpatch.New()
+	diffs := dmp.DiffMain(t, secondPass.Text, false)
+	fmt.Println(dmp.DiffPrettyText(diffs))
+
 	return nil
 }
