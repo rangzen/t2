@@ -14,6 +14,7 @@ type T2Service struct {
 type T2Config struct {
 	SourceLang string
 	PivotLang  string
+	OnlyDiff   bool
 }
 
 func NewT2(config T2Config, tr Translation) T2Service {
@@ -21,24 +22,32 @@ func NewT2(config T2Config, tr Translation) T2Service {
 }
 
 func (t2 T2Service) TraductionTranslation(t string) error {
-	fmt.Println("# Original text")
-	fmt.Println(t)
+	if !t2.config.OnlyDiff {
+		fmt.Println("# Original text")
+		fmt.Println(t)
+	}
 	firstPass, err := t2.tr.Translate(t, t2.config.SourceLang, t2.config.PivotLang)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("# Pivot text")
-	fmt.Println(firstPass.Text)
+	if !t2.config.OnlyDiff {
+		fmt.Println("# Pivot text")
+		fmt.Println(firstPass.Text)
+	}
 	secondPass, err := t2.tr.Translate(firstPass.Text, t2.config.PivotLang, t2.config.SourceLang)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("# Double translated text")
-	fmt.Println(secondPass.Text)
+	if !t2.config.OnlyDiff {
+		fmt.Println("# Double translated text")
+		fmt.Println(secondPass.Text)
+	}
 
-	fmt.Println("# Diff version")
+	if !t2.config.OnlyDiff {
+		fmt.Println("# Diff version")
+	}
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(t, secondPass.Text, false)
 	fmt.Println(dmp.DiffPrettyText(diffs))

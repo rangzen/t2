@@ -31,6 +31,7 @@ import (
 var cfgFile string
 var sourceLang string
 var pivotLang string
+var onlyDiff bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -64,6 +65,7 @@ func t2(t string) error {
 	c := service.T2Config{
 		SourceLang: sourceLang,
 		PivotLang:  pivotLang,
+		OnlyDiff:   onlyDiff,
 	}
 
 	t2 := service.NewT2(c, d)
@@ -80,6 +82,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.t2.yaml)")
+	rootCmd.PersistentFlags().BoolVarP(&onlyDiff, "only-diff", "d", false, "show only differences")
 
 	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
 	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN-US", "source language")
@@ -104,7 +107,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
+	if err := viper.ReadInConfig(); err == nil && !onlyDiff {
 		_, errPrint := fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 		if errPrint != nil {
 			log.Fatal(errPrint)
