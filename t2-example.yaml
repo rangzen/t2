@@ -1,2 +1,7 @@
-Endpoint: https://api-free.deepl.com/v2/translate
-ApiKey: redacted-0123-0123-0123-redacted:fx
+TranslationServices:
+  DeepL:
+    Endpoint: https://api-free.deepl.com/v2/translate
+    ApiKey: redacted-0123-0123-0123-redacted:fx
+  Google:
+    Endpoint: https://translation.googleapis.com/language/translate/v2
+    ApiKey: redactedredactedredacted

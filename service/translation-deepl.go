@@ -81,14 +81,14 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 func (d TranslationDeepl) prepareDeeplConfig(text string, source string, target string) url.Values {
 	deeplConfig := url.Values{}
 	deeplConfig.Set("text", text)
-	checkedSource := checkSource(source)
+	checkedSource := checkDeeplSource(source)
 	deeplConfig.Set("source_lang", checkedSource)
 	deeplConfig.Set("target_lang", target)
 	return deeplConfig
 }
 
-// checkSource will correct if needed the source language
-func checkSource(source string) string {
+// checkDeeplSource will correct if needed the source language
+func checkDeeplSource(source string) string {
 	// DeepL accept EN-GB and EN-US in target language but not as source language.
 	// https://www.deepl.com/docs-api/translating-text/request/
 	if source == "EN-GB" || source == "EN-US" {

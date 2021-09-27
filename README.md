@@ -70,19 +70,34 @@ go install -ldflags "-X github.com/rangzen/t2/cmd.Version=`git tag --sort=-versi
 
 ## Translation services
 
-### DeepL
-
-The actual default, and only, service is for translation is [DeepL](https://deepl.com).  
-You’ll need a Pro free account cause the free account is almost out of limits.  
-I don’t have a Pro paid account but I think that you just have to change the Endpoint configuration.
-
 #### Configuration
 
 * Create a `.t2.yaml` file configuration with:
 
 ```yaml
-Endpoint: https://api-free.deepl.com/v2/translate
-ApiKey: redacted-0123-0123-0123-redacted:fx
+TranslationServices:
+  DeepL:
+    Endpoint: https://api-free.deepl.com/v2/translate
+    ApiKey: redacted-0123-0123-0123-redacted:fx
+  Google:
+    Endpoint: https://translation.googleapis.com/language/translate/v2
+    ApiKey: redactedredactedredacted
 ```
 
-You can also see the `t2-example.yaml` file for an example.
+See the `t2-example.yaml` file for an example.
+
+### DeepL
+
+The actual default service for translation is [DeepL](https://deepl.com).  
+You’ll need a Pro free account because the free account is almost always out of limits.  
+I don’t have a Pro paid account, but I think that you just have to change the Endpoint configuration.
+
+### Google Cloud Translation
+
+For using [Google Cloud Translation](https://cloud.google.com/translate/), you need:
+* a Google Cloud account,
+* a Paid account,
+* an API key without restriction.
+
+"The `usage` command doesn't work with Google!"  
+I know. If you know the API endpoint for usage, please let me know.

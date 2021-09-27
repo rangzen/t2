@@ -29,6 +29,7 @@ import (
 )
 
 var cfgFile string
+var translationService string
 var sourceLang string
 var pivotLang string
 var onlyDiff bool
@@ -51,15 +52,28 @@ During this process, the most obvious errors are corrected.`,
 }
 
 func t2(t string) error {
-	endpoint := viper.GetString("Endpoint")
-	apiKey := viper.GetString("ApiKey")
-	if endpoint == "" || apiKey == "" {
-		return errors.New(".t2.yaml seems missing or empty")
+	var endpoint, apiKey string
+	var ts service.Translation
+	switch translationService {
+	case "deepl":
+		endpoint = viper.GetString("TranslationServices.DeepL.Endpoint")
+		apiKey = viper.GetString("TranslationServices.DeepL.ApiKey")
+		ts = service.TranslationDeepl{
+			Endpoint: endpoint,
+			ApiKey:   apiKey,
+		}
+	case "google":
+		endpoint = viper.GetString("TranslationServices.Google.Endpoint")
+		apiKey = viper.GetString("TranslationServices.Google.ApiKey")
+		ts = service.TranslationGoogle{
+			Endpoint: endpoint,
+			ApiKey:   apiKey,
+		}
+	default:
+		return errors.New("unknown translation service")
 	}
-
-	d := service.TranslationDeepl{
-		Endpoint: endpoint,
-		ApiKey:   apiKey,
+	if endpoint == "" || apiKey == "" {
+		return errors.New(".t2.yaml seems missing or incomplete")
 	}
 
 	c := service.T2Config{
@@ -68,7 +82,7 @@ func t2(t string) error {
 		OnlyDiff:   onlyDiff,
 	}
 
-	t2 := service.NewT2(c, d)
+	t2 := service.NewT2(c, ts)
 	return t2.TraductionTranslation(t)
 }
 
@@ -83,6 +97,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.t2.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&onlyDiff, "only-diff", "d", false, "show only differences")
+	rootCmd.PersistentFlags().StringVarP(&translationService, "translation-service", "t", "deepl", "translation service to use (deepl or google)")
 
 	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
 	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN-US", "source language")

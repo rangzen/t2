@@ -41,23 +41,31 @@ if the service provide such informations.`,
 }
 
 func usage() error {
-	endpoint := viper.GetString("Endpoint")
-	apiKey := viper.GetString("ApiKey")
-	if endpoint == "" || apiKey == "" {
-		return errors.New(".t2.yaml seems missing or empty")
-	}
+	switch translationService {
+	case "deepl":
+		endpoint := viper.GetString("Endpoint")
+		apiKey := viper.GetString("ApiKey")
+		if endpoint == "" || apiKey == "" {
+			return errors.New(".t2.yaml seems missing or empty")
+		}
 
-	d := service.TranslationDeepl{
-		Endpoint: endpoint,
-		ApiKey:   apiKey,
-	}
+		d := service.TranslationDeepl{
+			Endpoint: endpoint,
+			ApiKey:   apiKey,
+		}
 
-	u, err := d.Usage()
-	if err != nil {
-		log.Fatal(err)
+		u, err := d.Usage()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("Usage: %d/%d\n", u.Used, u.Limit)
+		return nil
+	case "google":
+		_, err := service.TranslationGoogle{}.Usage()
+		return err
+	default:
+		return errors.New("unknown translation service")
 	}
-	fmt.Printf("Usage: %d/%d\n", u.Used, u.Limit)
-	return nil
 }
 
 func init() {
