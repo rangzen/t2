@@ -10,11 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.0] - 2021-09-27
 ## Added
 - Google Cloud Translation.
+- `--to-clipboard` flag to return the result to the clipboard.
 
 ## [0.3.0] - 2021-09-25
 ### Added
 - Show the visual difference between the original text and the re-translated one.
-- Add the --only-diff flag to display only the visual difference.
+- Add the `--only-diff` flag to display only the visual difference.
 
 ## [0.2.0] - 2021-09-24
 ### Added

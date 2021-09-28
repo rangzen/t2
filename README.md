@@ -38,6 +38,7 @@ I want to speak eEnglish.
 ### Translate from the clipboard
 
 Don't bother with copy/paste operations, quoting text, etc. Just copy what you want to check and then `t2 clipboard`.
+You can add the `-c` flag to return the result to the clipboard.
 
 ```shell
 $ t2 clipboard

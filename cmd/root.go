@@ -33,6 +33,7 @@ var translationService string
 var sourceLang string
 var pivotLang string
 var diffOnly bool
+var copyToClipboard bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -77,9 +78,10 @@ func t2(t string) error {
 	}
 
 	c := service.Config{
-		SourceLang: sourceLang,
-		PivotLang:  pivotLang,
-		DiffOnly:   diffOnly,
+		SourceLang:      sourceLang,
+		PivotLang:       pivotLang,
+		DiffOnly:        diffOnly,
+		CopyToClipboard: copyToClipboard,
 	}
 
 	t2 := service.NewT2(c, ts)
@@ -98,6 +100,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.t2.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&diffOnly, "diff-only", "d", false, "show only differences")
 	rootCmd.PersistentFlags().StringVarP(&translationService, "translation-service", "t", "deepl", "translation service to use (deepl or google)")
+	rootCmd.PersistentFlags().BoolVarP(&copyToClipboard, "to-clipboard", "c", false, "copy result to clipboard")
 
 	rootCmd.Flags().StringVarP(&pivotLang, "pivot", "p", "FR", "pivot language")
 	rootCmd.Flags().StringVarP(&sourceLang, "source", "s", "EN-US", "source language")

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/atotto/clipboard"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -11,9 +12,10 @@ type T2 struct {
 }
 
 type Config struct {
-	SourceLang string
-	PivotLang  string
-	DiffOnly   bool
+	SourceLang      string
+	PivotLang       string
+	DiffOnly        bool
+	CopyToClipboard bool
 }
 
 func NewT2(c Config, ts TranslationService) T2 {
@@ -50,6 +52,12 @@ func (t2 T2) TraductionTranslation(t string) error {
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(t, secondPass.Text, false)
 	fmt.Println(dmp.DiffPrettyText(diffs))
+
+	if t2.config.CopyToClipboard {
+		if err := clipboard.WriteAll(secondPass.Text); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
