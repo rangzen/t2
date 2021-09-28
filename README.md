@@ -18,7 +18,7 @@ In a terminal, the diff version will appear in color:
 
 ![diff screenshot](https://raw.githubusercontent.com/rangzen/t2/main/doc/Screenshot_20210925_diff.png)
 
-Don't forget the `--only-diff` or `-d` flag if you want to display only this part.
+Don't forget the `--diff-only` or `-d` flag if you want to display only this part.
 
 ### Translate from CLI
 

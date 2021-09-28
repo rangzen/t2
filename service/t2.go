@@ -13,7 +13,7 @@ type T2 struct {
 type Config struct {
 	SourceLang string
 	PivotLang  string
-	OnlyDiff   bool
+	DiffOnly   bool
 }
 
 func NewT2(c Config, ts TranslationService) T2 {
@@ -21,7 +21,7 @@ func NewT2(c Config, ts TranslationService) T2 {
 }
 
 func (t2 T2) TraductionTranslation(t string) error {
-	if !t2.config.OnlyDiff {
+	if !t2.config.DiffOnly {
 		fmt.Println("# Original text")
 		fmt.Println(t)
 	}
@@ -30,7 +30,7 @@ func (t2 T2) TraductionTranslation(t string) error {
 	if err != nil {
 		return err
 	}
-	if !t2.config.OnlyDiff {
+	if !t2.config.DiffOnly {
 		fmt.Printf("# Pivot text (%s -> %s by %s)\n", t2.config.SourceLang, t2.config.PivotLang, t2.ts.Name())
 		fmt.Println(firstPass.Text)
 	}
@@ -39,12 +39,12 @@ func (t2 T2) TraductionTranslation(t string) error {
 	if err != nil {
 		return err
 	}
-	if !t2.config.OnlyDiff {
+	if !t2.config.DiffOnly {
 		fmt.Printf("# Double translated text (%s -> %s by %s)\n", t2.config.PivotLang, t2.config.SourceLang, t2.ts.Name())
 		fmt.Println(secondPass.Text)
 	}
 
-	if !t2.config.OnlyDiff {
+	if !t2.config.DiffOnly {
 		fmt.Println("# Diff version")
 	}
 	dmp := diffmatchpatch.New()
