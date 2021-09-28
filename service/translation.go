@@ -9,7 +9,7 @@ type UsageResponse struct {
 	Limit int64
 }
 
-type Translation interface {
+type TranslationService interface {
 	Name() string
 	Translate(text string, source string, target string) (TranslationResponse, error)
 	Usage() (UsageResponse, error)

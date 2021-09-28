@@ -3,45 +3,44 @@ package service
 import (
 	"fmt"
 	"github.com/sergi/go-diff/diffmatchpatch"
-	"log"
 )
 
-type T2Service struct {
-	config T2Config
-	tr     Translation
+type T2 struct {
+	config Config
+	ts     TranslationService
 }
 
-type T2Config struct {
+type Config struct {
 	SourceLang string
 	PivotLang  string
 	OnlyDiff   bool
 }
 
-func NewT2(config T2Config, tr Translation) T2Service {
-	return T2Service{config: config, tr: tr}
+func NewT2(c Config, ts TranslationService) T2 {
+	return T2{config: c, ts: ts}
 }
 
-func (t2 T2Service) TraductionTranslation(t string) error {
+func (t2 T2) TraductionTranslation(t string) error {
 	if !t2.config.OnlyDiff {
 		fmt.Println("# Original text")
 		fmt.Println(t)
 	}
-	firstPass, err := t2.tr.Translate(t, t2.config.SourceLang, t2.config.PivotLang)
-	if err != nil {
-		log.Fatal(err)
-	}
 
+	firstPass, err := t2.ts.Translate(t, t2.config.SourceLang, t2.config.PivotLang)
+	if err != nil {
+		return err
+	}
 	if !t2.config.OnlyDiff {
-		fmt.Printf("# Pivot text (%s -> %s by %s)\n", t2.config.SourceLang, t2.config.PivotLang, t2.tr.Name())
+		fmt.Printf("# Pivot text (%s -> %s by %s)\n", t2.config.SourceLang, t2.config.PivotLang, t2.ts.Name())
 		fmt.Println(firstPass.Text)
 	}
-	secondPass, err := t2.tr.Translate(firstPass.Text, t2.config.PivotLang, t2.config.SourceLang)
-	if err != nil {
-		log.Fatal(err)
-	}
 
+	secondPass, err := t2.ts.Translate(firstPass.Text, t2.config.PivotLang, t2.config.SourceLang)
+	if err != nil {
+		return err
+	}
 	if !t2.config.OnlyDiff {
-		fmt.Printf("# Double translated text (%s -> %s by %s)\n", t2.config.PivotLang, t2.config.SourceLang, t2.tr.Name())
+		fmt.Printf("# Double translated text (%s -> %s by %s)\n", t2.config.PivotLang, t2.config.SourceLang, t2.ts.Name())
 		fmt.Println(secondPass.Text)
 	}
 

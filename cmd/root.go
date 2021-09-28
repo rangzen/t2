@@ -53,7 +53,7 @@ During this process, the most obvious errors are corrected.`,
 
 func t2(t string) error {
 	var endpoint, apiKey string
-	var ts service.Translation
+	var ts service.TranslationService
 	switch translationService {
 	case "deepl":
 		endpoint = viper.GetString("TranslationServices.DeepL.Endpoint")
@@ -76,7 +76,7 @@ func t2(t string) error {
 		return errors.New(".t2.yaml seems missing or incomplete")
 	}
 
-	c := service.T2Config{
+	c := service.Config{
 		SourceLang: sourceLang,
 		PivotLang:  pivotLang,
 		OnlyDiff:   onlyDiff,
