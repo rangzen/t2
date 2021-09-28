@@ -34,6 +34,10 @@ type DeeplRequestUsage struct {
 	CharacterLimit int64 `json:"character_limit"`
 }
 
+func (d TranslationDeepl) Name() string {
+	return "DeepL"
+}
+
 func (d TranslationDeepl) Translate(text string, source string, target string) (TranslationResponse, error) {
 	deeplConfig := d.prepareDeeplConfig(text, source, target)
 

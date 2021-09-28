@@ -10,6 +10,7 @@ type UsageResponse struct {
 }
 
 type Translation interface {
+	Name() string
 	Translate(text string, source string, target string) (TranslationResponse, error)
 	Usage() (UsageResponse, error)
 }

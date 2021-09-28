@@ -37,6 +37,10 @@ type GoogleRequestUsage struct {
 	CharacterLimit int64 `json:"character_limit"`
 }
 
+func (d TranslationGoogle) Name() string {
+	return "Google"
+}
+
 func (d TranslationGoogle) Translate(text string, source string, target string) (TranslationResponse, error) {
 	googleConfig := d.prepareGoogleConfig(text, source, target)
 

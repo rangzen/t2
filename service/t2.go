@@ -32,7 +32,7 @@ func (t2 T2Service) TraductionTranslation(t string) error {
 	}
 
 	if !t2.config.OnlyDiff {
-		fmt.Println("# Pivot text")
+		fmt.Printf("# Pivot text (%s -> %s by %s)\n", t2.config.SourceLang, t2.config.PivotLang, t2.tr.Name())
 		fmt.Println(firstPass.Text)
 	}
 	secondPass, err := t2.tr.Translate(firstPass.Text, t2.config.PivotLang, t2.config.SourceLang)
@@ -41,7 +41,7 @@ func (t2 T2Service) TraductionTranslation(t string) error {
 	}
 
 	if !t2.config.OnlyDiff {
-		fmt.Println("# Double translated text")
+		fmt.Printf("# Double translated text (%s -> %s by %s)\n", t2.config.PivotLang, t2.config.SourceLang, t2.tr.Name())
 		fmt.Println(secondPass.Text)
 	}
 
