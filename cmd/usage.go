@@ -43,8 +43,8 @@ if the service provide such informations.`,
 func usage() error {
 	switch translationService {
 	case "deepl":
-		endpoint := viper.GetString("Endpoint")
-		apiKey := viper.GetString("ApiKey")
+		endpoint := viper.GetString("TranslationServices.DeepL.Endpoint")
+		apiKey := viper.GetString("TranslationServices.DeepL.ApiKey")
 		if endpoint == "" || apiKey == "" {
 			return errors.New(".t2.yaml seems missing or empty")
 		}
