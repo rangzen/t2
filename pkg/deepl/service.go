@@ -1,11 +1,11 @@
-package service
+package deepl
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/rangzen/t2"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -15,30 +15,30 @@ import (
 
 const deeplEndpointUsage = "https://api-free.deepl.com/v2/usage"
 
-type TranslationDeepl struct {
+type TranslationService struct {
 	Endpoint string
 	ApiKey   string
 }
 
-type DeeplRequestResponse struct {
-	Translations []DeeplRequestResponseTranslation
+type RequestResponse struct {
+	Translations []RequestResponseTranslation
 }
 
-type DeeplRequestResponseTranslation struct {
+type RequestResponseTranslation struct {
 	DetectedSourceLanguage string `json:"detected_source_language"`
 	Text                   string `json:"text"`
 }
 
-type DeeplRequestUsage struct {
+type RequestUsage struct {
 	CharacterCount int64 `json:"character_count"`
 	CharacterLimit int64 `json:"character_limit"`
 }
 
-func (d TranslationDeepl) Name() string {
+func (d TranslationService) Name() string {
 	return "DeepL"
 }
 
-func (d TranslationDeepl) Translate(text string, source string, target string) (TranslationResponse, error) {
+func (d TranslationService) Translate(text string, source string, target string) (t2.TranslationResponse, error) {
 	deeplConfig := d.prepareDeeplConfig(text, source, target)
 
 	req, err := d.prepareRequest(deeplConfig)
@@ -58,17 +58,17 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 			log.Fatal(err)
 		}
 	}(res.Body)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		return TranslationResponse{}, errors.New(
+		return t2.TranslationResponse{}, errors.New(
 			fmt.Sprint("status:", res.StatusCode, " body:", string(body)),
 		)
 	}
 
-	var dres DeeplRequestResponse
+	var dres RequestResponse
 	err = json.Unmarshal(body, &dres)
 	if err != nil {
 		log.Fatal(err)
@@ -78,11 +78,11 @@ func (d TranslationDeepl) Translate(text string, source string, target string) (
 	for _, t := range dres.Translations {
 		sb.WriteString(t.Text)
 	}
-	return TranslationResponse{Text: sb.String()}, nil
+	return t2.TranslationResponse{Text: sb.String()}, nil
 }
 
 // prepareDeeplConfig creates the DeepL configuration
-func (d TranslationDeepl) prepareDeeplConfig(text string, source string, target string) url.Values {
+func (d TranslationService) prepareDeeplConfig(text string, source string, target string) url.Values {
 	deeplConfig := url.Values{}
 	deeplConfig.Set("text", text)
 	checkedSource := checkDeeplSource(source)
@@ -102,7 +102,7 @@ func checkDeeplSource(source string) string {
 }
 
 // prepareRequest creates the HTTP Request
-func (d TranslationDeepl) prepareRequest(deeplConfig url.Values) (*http.Request, error) {
+func (d TranslationService) prepareRequest(deeplConfig url.Values) (*http.Request, error) {
 	dcEncoded := deeplConfig.Encode()
 	req, err := http.NewRequest(http.MethodPost, d.Endpoint, strings.NewReader(dcEncoded))
 	if err != nil {
@@ -114,7 +114,7 @@ func (d TranslationDeepl) prepareRequest(deeplConfig url.Values) (*http.Request,
 	return req, err
 }
 
-func (d TranslationDeepl) Usage() (UsageResponse, error) {
+func (d TranslationService) Usage() (t2.UsageResponse, error) {
 	req, err := http.NewRequest(http.MethodGet, deeplEndpointUsage, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -133,17 +133,17 @@ func (d TranslationDeepl) Usage() (UsageResponse, error) {
 			log.Fatal(err)
 		}
 	}(res.Body)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var dres DeeplRequestUsage
+	var dres RequestUsage
 	err = json.Unmarshal(body, &dres)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return UsageResponse{
+	return t2.UsageResponse{
 		Used:  dres.CharacterCount,
 		Limit: dres.CharacterLimit,
 	}, nil

@@ -1,11 +1,11 @@
-package service
+package google
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/rangzen/t2"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -13,35 +13,35 @@ import (
 	"strings"
 )
 
-type TranslationGoogle struct {
+type TranslationService struct {
 	Endpoint string
 	ApiKey   string
 }
 
-type GoogleRequestResponse struct {
-	Data GoogleTranslateTextResponseList `json:"data"`
+type RequestResponse struct {
+	Data TranslateTextResponseList `json:"data"`
 }
 
-type GoogleTranslateTextResponseList struct {
-	Translations []GoogleTranslateTextResponseTranslation `json:"translations"`
+type TranslateTextResponseList struct {
+	Translations []TranslateTextResponseTranslation `json:"translations"`
 }
 
-type GoogleTranslateTextResponseTranslation struct {
+type TranslateTextResponseTranslation struct {
 	DetectedSourceLanguage string `json:"detectedSourceLanguage"`
 	Model                  string `json:"model"`
 	Text                   string `json:"translatedText"`
 }
 
-type GoogleRequestUsage struct {
+type RequestUsage struct {
 	CharacterCount int64 `json:"character_count"`
 	CharacterLimit int64 `json:"character_limit"`
 }
 
-func (d TranslationGoogle) Name() string {
+func (d TranslationService) Name() string {
 	return "Google"
 }
 
-func (d TranslationGoogle) Translate(text string, source string, target string) (TranslationResponse, error) {
+func (d TranslationService) Translate(text string, source string, target string) (t2.TranslationResponse, error) {
 	googleConfig := d.prepareGoogleConfig(text, source, target)
 
 	req, err := d.prepareRequest(googleConfig)
@@ -61,17 +61,17 @@ func (d TranslationGoogle) Translate(text string, source string, target string) 
 			log.Fatal(err)
 		}
 	}(res.Body)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		return TranslationResponse{}, errors.New(
+		return t2.TranslationResponse{}, errors.New(
 			fmt.Sprint("status:", res.StatusCode, " body:", string(body)),
 		)
 	}
 
-	var dres GoogleRequestResponse
+	var dres RequestResponse
 	err = json.Unmarshal(body, &dres)
 	if err != nil {
 		log.Fatal(err)
@@ -81,11 +81,11 @@ func (d TranslationGoogle) Translate(text string, source string, target string) 
 	for _, t := range dres.Data.Translations {
 		sb.WriteString(t.Text)
 	}
-	return TranslationResponse{Text: sb.String()}, nil
+	return t2.TranslationResponse{Text: sb.String()}, nil
 }
 
 // prepareGoogleConfig creates the DeepL configuration
-func (d TranslationGoogle) prepareGoogleConfig(text string, source string, target string) url.Values {
+func (d TranslationService) prepareGoogleConfig(text string, source string, target string) url.Values {
 	deeplConfig := url.Values{}
 	deeplConfig.Set("q", text)
 	checkedTarget := checkGoogleLanguage(target)
@@ -108,7 +108,7 @@ func checkGoogleLanguage(source string) string {
 }
 
 // prepareRequest creates the HTTP Request
-func (d TranslationGoogle) prepareRequest(config url.Values) (*http.Request, error) {
+func (d TranslationService) prepareRequest(config url.Values) (*http.Request, error) {
 	dcEncoded := config.Encode()
 	req, err := http.NewRequest(http.MethodPost, d.Endpoint, strings.NewReader(dcEncoded))
 	if err != nil {
@@ -119,6 +119,6 @@ func (d TranslationGoogle) prepareRequest(config url.Values) (*http.Request, err
 	return req, err
 }
 
-func (d TranslationGoogle) Usage() (UsageResponse, error) {
-	return UsageResponse{}, errors.New("Check Google Cloud Console for usages.")
+func (d TranslationService) Usage() (t2.UsageResponse, error) {
+	return t2.UsageResponse{}, errors.New("Check Google Cloud Console for usages.")
 }

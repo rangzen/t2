@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Languages in the YAML config file.
 
+## [0.5.0] - 2022-08-16
+## Changed
+- Project structure.
+
 ## [0.4.1] - 2022-08-07
 ## Fixed
 - `usage` command for Deepl.
@@ -28,7 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2021-09-24
 - First release.
 
-[Unreleased]: https://github.com/rangzen/t2/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/rangzen/t2/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/rangzen/t2/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/rangzen/t2/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/rangzen/t2/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/rangzen/t2/compare/v0.2.0...v0.3.0
