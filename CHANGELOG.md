@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Languages in the YAML config file.
 
+## [0.6.0] - 2022-12-23
+## Changed
+- Project structure. Again.
+
 ## [0.5.0] - 2022-08-16
 ## Changed
 - Project structure.

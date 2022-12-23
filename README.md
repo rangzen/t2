@@ -70,7 +70,7 @@ or
 ```shell
 git clone https://github.com/rangzen/t2
 cd t2
-go install -ldflags "-X github.com/rangzen/t2/cmd.Version=`git tag --sort=-version:refname | head -n 1`"
+go install -ldflags "-X github.com/rangzen/t2/main.Version=`git tag --sort=-version:refname | head -n 1`"
 ```
 
 ## Translation services
