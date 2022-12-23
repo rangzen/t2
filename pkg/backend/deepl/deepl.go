@@ -1,10 +1,27 @@
+/*
+Copyright © 2021 Cedric L'homme <public@l-homme.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package deepl
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/rangzen/t2"
+	"github.com/rangzen/t2/pkg/backend"
 	"io"
 	"log"
 	"net/http"
@@ -38,7 +55,7 @@ func (d TranslationService) Name() string {
 	return "DeepL"
 }
 
-func (d TranslationService) Translate(text string, source string, target string) (t2.TranslationResponse, error) {
+func (d TranslationService) Translate(text string, source string, target string) (backend.TranslationResponse, error) {
 	deeplConfig := d.prepareDeeplConfig(text, source, target)
 
 	req, err := d.prepareRequest(deeplConfig)
@@ -63,7 +80,7 @@ func (d TranslationService) Translate(text string, source string, target string)
 		log.Fatal(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		return t2.TranslationResponse{}, errors.New(
+		return backend.TranslationResponse{}, errors.New(
 			fmt.Sprint("status:", res.StatusCode, " body:", string(body)),
 		)
 	}
@@ -78,7 +95,7 @@ func (d TranslationService) Translate(text string, source string, target string)
 	for _, t := range dres.Translations {
 		sb.WriteString(t.Text)
 	}
-	return t2.TranslationResponse{Text: sb.String()}, nil
+	return backend.TranslationResponse{Text: sb.String()}, nil
 }
 
 // prepareDeeplConfig creates the DeepL configuration
@@ -114,7 +131,7 @@ func (d TranslationService) prepareRequest(deeplConfig url.Values) (*http.Reques
 	return req, err
 }
 
-func (d TranslationService) Usage() (t2.UsageResponse, error) {
+func (d TranslationService) Usage() (backend.UsageResponse, error) {
 	req, err := http.NewRequest(http.MethodGet, deeplEndpointUsage, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -143,7 +160,7 @@ func (d TranslationService) Usage() (t2.UsageResponse, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return t2.UsageResponse{
+	return backend.UsageResponse{
 		Used:  dres.CharacterCount,
 		Limit: dres.CharacterLimit,
 	}, nil

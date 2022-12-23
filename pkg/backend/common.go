@@ -15,16 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package atotto
+package backend
 
-import "github.com/atotto/clipboard"
-
-type Clipboard struct{}
-
-func (Clipboard) Read() (string, error) {
-	return clipboard.ReadAll()
+type TranslationResponse struct {
+	Text string
 }
 
-func (Clipboard) Write(t string) error {
-	return clipboard.WriteAll(t)
+type UsageResponse struct {
+	Used  int64
+	Limit int64
 }

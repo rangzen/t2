@@ -15,16 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package atotto
+package main
 
-import "github.com/atotto/clipboard"
-
-type Clipboard struct{}
-
-func (Clipboard) Read() (string, error) {
-	return clipboard.ReadAll()
-}
-
-func (Clipboard) Write(t string) error {
-	return clipboard.WriteAll(t)
+func main() {
+	Execute()
 }
