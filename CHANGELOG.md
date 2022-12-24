@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Languages in the YAML config file.
 
+## [0.6.2-kgjv] - 2022-12-23
+## Changed
+- how to get version. Thank you, @kgjv.
+
 ## [0.6.1] - 2022-12-23
 ## Fixed
 - .gitignore for the T2 package.
@@ -40,7 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2021-09-24
 - First release.
 
-[Unreleased]: https://github.com/rangzen/t2/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/rangzen/t2/compare/v0.6.2-kgjv...HEAD
+[0.6.2-kgjv]: https://github.com/rangzen/t2/compare/v0.6.1...v0.6.1-kgjv
+[0.6.1]: https://github.com/rangzen/t2/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/rangzen/t2/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/rangzen/t2/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/rangzen/t2/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/rangzen/t2/compare/v0.3.0...v0.4.0

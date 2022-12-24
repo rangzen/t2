@@ -20,12 +20,8 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"runtime/debug"
 )
-
-// Version must be updated during compilation
-// https://www.forkingbytes.com/blog/dynamic-versioning-your-go-application/
-// https://stackoverflow.com/questions/47509272/how-to-set-package-variable-using-ldflags-x-in-golang-build
-var Version = "see the documentation to compile with the right flag"
 
 // versionCmd represents the Version command
 var versionCmd = &cobra.Command{
@@ -33,7 +29,13 @@ var versionCmd = &cobra.Command{
 	Short: "Version of t2",
 	Long:  `Display the actual version of t2.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Version: %s\n", Version)
+		if rbi, ok := debug.ReadBuildInfo(); !ok {
+			fmt.Println("No build info available.")
+		} else {
+			// Eternal thanks to https://www.reddit.com/user/kgjv/
+			// for https://www.reddit.com/r/golang/comments/ztwniv/automatic_versioning_at_compile_time_with_go/j1ghqfz/?context=3
+			fmt.Printf("Version: %s\n", rbi.Main.Version)
+		}
 	},
 }
 
